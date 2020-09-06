@@ -1,0 +1,8 @@
+1. The easiest way to generate the keys is as follows:
+
+   $ make
+   $ ./mygen.sh
+
+2. If you would like to change the file names and number of keys generated
+   please have a look at mygen.sh.  Each individual command also prints
+   a usage message if invoked without any arguments.

@@ -466,7 +466,6 @@ void * lbtree::lookup (key_type key, int *pos)
     bnode *p;
     bleaf *lp;
     int i,t,m,b;
-    key_type r;
     
     unsigned char key_hash= hashcode1B(key);
     int ret_pos;
@@ -490,9 +489,8 @@ Again1:
         b=1; t=p->num();
         while (b+7<=t) {
             m=(b+t) >>1;
-            r= key - p->k(m);
-            if (r>0) b=m+1;
-            else if (r<0) t = m-1;
+            if (key > p->k(m)) b=m+1;
+            else if (key < p->k(m)) t = m-1;
             else {p=p->ch(m); goto inner_done;}
         }
         
@@ -605,7 +603,6 @@ void lbtree::insert (key_type key, void *ptr)
   { bnode *p;
     bleaf *lp;
     int i,t,m,b;
-    key_type r;
     
 Again2:
     // 1. RTM begin
@@ -634,9 +631,8 @@ Again2:
         b=1; t=p->num();
         while (b+7<=t) {
             m=(b+t) >>1;
-            r= key - p->k(m);
-            if (r>0) b=m+1;
-            else if (r<0) t = m-1;
+            if (key > p->k(m)) b=m+1;
+            else if (key < p->k(m)) t = m-1;
             else {p=p->ch(m); ppos[i]=m; goto inner_done;}
         }
         
@@ -998,7 +994,6 @@ void lbtree::del (key_type key)
   { bnode *p;
     bleaf *lp;
     int i,t,m,b;
-    key_type r;
     
 Again3:
     // 1. RTM begin
@@ -1026,9 +1021,8 @@ Again3:
         b=1; t=p->num();
         while (b+7<=t) {
             m=(b+t) >>1;
-            r= key - p->k(m);
-            if (r>0) b=m+1;
-            else if (r<0) t = m-1;
+            if (key > p->k(m)) b=m+1;
+            else if (key < p->k(m)) t = m-1;
             else {p=p->ch(m); ppos[i]=m; goto inner_done;}
         }
         

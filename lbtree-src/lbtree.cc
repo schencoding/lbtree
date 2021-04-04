@@ -732,10 +732,15 @@ Again2:
        if (slot<3) {
            // 1.3.1 write word 0
            meta.v.bitmap= bitmap;
+
+#ifdef NONTEMP
+           lp->setWord0_temporal(&meta);
+#else
            lp->setWord0(&meta);
 
            // 1.3.2 flush
            clwb(lp); sfence();
+#endif           
 
            return;
        }
@@ -760,8 +765,12 @@ Again2:
 
          // 1.4.3 change meta and flush line 0
          meta.v.bitmap= bitmap;
+#ifdef NONTEMP
+         lp->setBothWords_temporal(&meta);
+#else
          lp->setBothWords(&meta);
          clwb(lp); sfence();
+#endif         
 
          return;
        }
@@ -1138,9 +1147,12 @@ Again3:
 
        meta.v.lock= 0;  // clear lock in temp meta
        meta.v.bitmap &= ~(1<<ppos[0]);  // mark the bitmap to delete the entry
+#ifdef NONTEMP
+       lp->setWord0_temporal(&meta);
+#else
        lp->setWord0(&meta);
        clwb(lp); sfence();
-
+#endif
        return;
 
     } // end of more than one key
